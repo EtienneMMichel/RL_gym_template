@@ -1,0 +1,30 @@
+total_num_episodes: 5000
+seeds: [1, 2, 3, 5, 8]
+save: False
+env:
+  name: ""
+  render: False
+  reward:
+    name: ""
+
+
+# ---------------- DeeplRL agent's template
+# agent:
+#   name: ""
+#   policy:
+#     name: ""
+#   optimizer:
+#     name: ""
+#     learning_rate: 0.01
+#   loss:
+#     name: ""
+#     gamma: 0.99
+
+# ---------------- non DeeplRL agent's template
+# agent:
+#   name: ""
+#   learner:
+#     learning_rate: 0.001
+#     gamma: 0.99
+#   explorer:
+#     epsilon: 0.3
