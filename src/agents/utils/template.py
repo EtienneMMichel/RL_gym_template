@@ -38,7 +38,8 @@ class Template(Agent):
         pass
 
     def episode_update(self):
-        pass
+        loss = 1
+        return loss
 
     def save(self, saving_path):
         pass
