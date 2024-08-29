@@ -26,7 +26,6 @@ def run_episode(env, agent, seed, is_rendering):
         done = terminated or truncated
         agent.update(state, action, reward, new_state)
         state = new_state
-    env.close()
     policy_loss = agent.episode_update()
     
     return rewards, episode_infos, policy_loss
@@ -61,6 +60,7 @@ def train_env(config):
                     "infos": episode_infos,
                     "policy_loss": policy_loss,
                 })
+            env.close()
         infos[seed] = infos_in_seed
     
     if config["save"]:
@@ -86,11 +86,6 @@ def test_env(config):
             "policy_loss": policy_loss,
         })
         infos[seed] = infos_in_seed
-
-    
-    
-    if config["save"]:
-        utils.save(config, agent, infos)
 
     return infos
 

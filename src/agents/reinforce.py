@@ -48,7 +48,6 @@ class REINFORCE(DeepAgent):
     def episode_update(self):
         """Updates the policy network's weights."""
         loss = self.loss(rewards=self.rewards, probs=self.probs)
-        
         # Update the policy network
         self.optimizer.zero_grad()
         loss.backward()
