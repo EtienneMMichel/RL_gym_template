@@ -92,6 +92,16 @@ def make_train_summary(infos, nb_episodes_inside_env):
 
     # fig.show()
 
+def plot_rewards(rewards_array):
+    content = []
+    for rewards in rewards_array:
+        content.append(go.Scatter(
+            x=list(range(len(rewards))),
+            y=rewards,
+            mode='lines'
+        ))
+    return go.Figure(content)
+
 def make_test_summary(infos, nb_episodes_inside_env):
     rewards_array = []
     loss_array = []
@@ -99,9 +109,8 @@ def make_test_summary(infos, nb_episodes_inside_env):
         rewards_array.append(infos[seed][0]["rewards"])
         loss_array.append(infos[seed][0]["policy_loss"])
 
-    rewards_array = np.array(rewards_array)
-    loss_array = np.array(loss_array)
+    print(rewards_array)
 
-    fig_rewards = plot_continuous_error_bands(means=np.mean(rewards_array, axis=0), stds=np.std(rewards_array, axis=0))
+    fig_rewards = plot_rewards(rewards_array)
     fig_rewards.show()
     mean_loss = np.mean(loss_array)
