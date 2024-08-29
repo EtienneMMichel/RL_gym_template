@@ -20,8 +20,8 @@ class Gaussian_Perceptron_Policy_Network(nn.Module):
         super().__init__()
         
         self.eps = 1e-6  # small number for mathematical stability
-        hidden_space1 = 16  # Nothing special with 16, feel free to change
-        hidden_space2 = 32  # Nothing special with 32, feel free to change
+        hidden_space1 = 256  # Nothing special with 16, feel free to change
+        hidden_space2 = 256  # Nothing special with 32, feel free to change
         inputs_ = reduce((lambda x, y: x * y), obs_space_dims)
         self.controller = controller.Distribution_Controller(dist_type="Gaussian", action_space_dims=action_space_dims)
         # Shared Network
@@ -77,6 +77,11 @@ class Gaussian_Perceptron_Policy_Network(nn.Module):
         torch.save(self.means_net.state_dict(), f"{path}/means_net.pt")
         torch.save(self.stddevs_net.state_dict(), f"{path}/stddevs_net.pt")
 
+    def from_save(self, loading_path):
+        self.shared_net.load_state_dict(torch.load(f"{loading_path}/models/shared_net.pt"))
+        self.means_net.load_state_dict(torch.load(f"{loading_path}/models/means_net.pt"))
+        self.stddevs_net.load_state_dict(torch.load(f"{loading_path}/models/stddevs_net.pt"))
+
 
 
 
@@ -94,8 +99,8 @@ class Binary_Perceptron_Policy_Network(nn.Module):
         super().__init__()
         
         self.eps = 1e-6  # small number for mathematical stability
-        hidden_space1 = 16  # Nothing special with 16, feel free to change
-        hidden_space2 = 32  # Nothing special with 32, feel free to change
+        hidden_space1 = 256  # Nothing special with 16, feel free to change
+        hidden_space2 = 256  # Nothing special with 32, feel free to change
         inputs_ = reduce((lambda x, y: x * y), obs_space_dims)
         self.controller = controller.Distribution_Controller(dist_type="Binary", action_space_dims=action_space_dims)
         self.net = nn.Sequential(
@@ -105,7 +110,6 @@ class Binary_Perceptron_Policy_Network(nn.Module):
             nn.Tanh(),
             nn.Linear(hidden_space2, 1),
             nn.Sigmoid()
-            
         )
 
 
@@ -120,3 +124,6 @@ class Binary_Perceptron_Policy_Network(nn.Module):
         path = f"{saving_path}/models"
         os.mkdir(path)
         torch.save(self.net.state_dict(), f"{path}/net.pt")
+
+    def from_save(self, loading_path):
+        self.net.load_state_dict(torch.load(f"{loading_path}/models/net.pt"))

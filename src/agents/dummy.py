@@ -18,6 +18,9 @@ class Dummy(Agent):
     def model_action_2_world_action(self, action):
         pass
 
+    def from_save(self, saved_name):
+        pass
+
 
     def act(self, obs):
         """Returns an action, conditioned on the policy and observation.

@@ -25,5 +25,7 @@ class DeepAgent(Agent):
     def save(self, saving_path):
         self.policy.save(saving_path)
         
+    def from_save(self, saved_name):
+        self.policy.from_save(saved_name)
 
     

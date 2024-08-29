@@ -43,3 +43,6 @@ class Template(Agent):
 
     def save(self, saving_path):
         pass
+
+    def from_save(self, saved_name):
+        pass

@@ -34,6 +34,7 @@ def run_episode(env, agent, seed, is_rendering):
 def train_env(config):
     envs_list = envs.generate_envs(config["env"])
     env = envs_list[0]
+    print("action sampled: ", env.action_space.sample())
     is_rendering = config["env"]["render"]
 
     total_num_episodes = config["total_num_episodes"] #int(5e3)  # Total number of episodes
@@ -71,6 +72,7 @@ def train_env(config):
 
 def test_env(config):
     env = envs.test_env(config["env"])
+    print("action sampled: ", env.action_space.sample())
     seeds =  config["seeds"]
     infos = {}
     for seed in tqdm(seeds):
@@ -79,6 +81,8 @@ def test_env(config):
 
         # Reinitialize agent every seed
         agent = eval(f"agents.{config['agent']['name']}(env.observation_space, env.action_space, config['agent'])")
+        if config["agent"]["policy"]["save"]["name"] != "":
+            utils.load_model(agent, folder_name=config["agent"]["policy"]["save"]["name"])
         rewards, episode_infos, policy_loss = run_episode(env, agent, seed, is_rendering=True)
         infos_in_seed.append({
             "rewards": rewards,
