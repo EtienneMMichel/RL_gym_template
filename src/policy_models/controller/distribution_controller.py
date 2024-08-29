@@ -1,5 +1,6 @@
 from torch.distributions.normal import Normal
-
+import torch
+import numpy as np
 
 def Gaussian_sampling(action_dist_params):
     '''
@@ -14,17 +15,32 @@ def Gaussian_sampling(action_dist_params):
     return action, prob
 
 
+def Binary_sampling(action_dist_params):
+    '''
+    action_dist_params : {"p":float}
+    p: probability to choose action 0
+    '''
+    p = action_dist_params["p"][0][0].clone().detach().numpy()
+    action = np.random.choice([0,1], p=[p, 1 - p])
+    prob = (action_dist_params["p"][0][0] if action == 0 else torch.tensor(1)-action_dist_params["p"][0][0])
+    # action = torch.tensor(action)
+    return action, prob
+
 class Distribution_Controller():
     def __init__(self, dist_type, action_space_dims) -> None:
         self.dist_type = dist_type
         self.action_space_dims = action_space_dims
 
     def model_action_2_world_action(self, action_distribution):
-        total_log_prob = 0
-        total_action = []
-        for action_dist_params in action_distribution:
-            action, prob = eval(f"{self.dist_type}_sampling(action_dist_params)")
-            total_action.append(action)
-            total_log_prob += prob
+        if isinstance(action_distribution, list):
+            total_log_prob = 0
+            total_action = []
+            for action_dist_params in action_distribution:
+                action, prob = eval(f"{self.dist_type}_sampling(action_dist_params)")
+                total_action.append(action)
+                total_log_prob += prob
+        elif isinstance(action_distribution, dict):
+            # Discrete case
+            total_action, total_log_prob = eval(f"{self.dist_type}_sampling(action_distribution)")
         
         return total_action, total_log_prob
